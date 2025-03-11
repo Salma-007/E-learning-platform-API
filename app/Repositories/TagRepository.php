@@ -4,12 +4,14 @@ namespace App\Repositories;
 
 use App\Models\Tag;
 use App\Interfaces\TagInterface;
+use App\Http\Resources\TagResource;
 
 class TagRepository implements TagInterface{
 
     public function getAll()
     {
-        return Tag::all();
+        $tags = Tag::all();
+        return TagResource::collection($tags);
     }
 
     public function findById(int $id)
