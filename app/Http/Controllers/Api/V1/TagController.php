@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Services\TagService;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use OpenAPI\Annotations as OS;
+use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class TagController extends Controller
 {
@@ -29,7 +30,6 @@ class TagController extends Controller
         try {
             return response()->json($this->tagService->listTags());
         } catch (\Exception $e) {
-            Log::error("Erreur lors de la récupération des tags : " . $e->getMessage());
             return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des tags.'], 500);
         }
     }   
@@ -51,7 +51,15 @@ class TagController extends Controller
      */
     public function show($id)
     {
-        return response()->json($this->tagService->getTag($id));
+        try {
+                if (!is_numeric($id)) {
+                throw new \Exception("L'ID du tag doit être un nombre.", 400);
+            }
+          return response()->json($this->tagService->getTag($id));  
+        } catch(\Exception $e){
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération de cet tag.'], 500);
+        }
+        
     }
 
             /**
@@ -72,11 +80,17 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:tags,name',
+            ]);
 
-        return response()->json($this->tagService->createTag($validated), 201);
+            return response()->json($this->tagService->createTag($validated), 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la création du tag.'], 500);
+        }
     }
 
 
@@ -105,11 +119,21 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-        ]);
+        try {
+            if (!is_numeric($id)) {
+                throw new \Exception("L'ID du tag doit être un nombre.", 400);
+            }
 
-        return response()->json($this->tagService->updateTag($id, $validated));
+            $validated = $request->validate([
+                'name' => 'sometimes|required|string|max:255|unique:tags,name,' . $id,
+            ]);
+
+            return response()->json($this->tagService->updateTag($id, $validated));
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 500);
+        }
     }
 
 
@@ -131,7 +155,16 @@ class TagController extends Controller
      */
     public function destroy($id)
     {
-        return response()->json($this->tagService->deleteTag($id));
+        try {
+            if (!is_numeric($id)) {
+                throw new \Exception("L'ID du tag doit être un nombre.", 400);
+            }
+
+            $this->tagService->deleteTag($id);
+            return response()->json(['message' => 'Tag supprimé avec succès.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 500);
+        }
     }
 
 }
