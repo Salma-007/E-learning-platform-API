@@ -41,7 +41,7 @@ class TagRepository implements TagInterface{
                 $tags = array_map('trim', $tags);
 
                 foreach ($tags as $tagName) {
-                    Tag::create(['name' => $tagName]);
+                    $createdTags[] = Tag::create(['name' => $tagName]);
                 }
             }
         } catch (QueryException $e) {

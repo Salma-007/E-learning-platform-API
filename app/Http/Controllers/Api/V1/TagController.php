@@ -85,7 +85,9 @@ class TagController extends Controller
                 'name' => 'required|string|max:255|unique:tags,name',
             ]);
 
-            return response()->json($this->tagService->createTag($validated), 201);
+            $tags = $this->tagService->createTag($validated); 
+            return response()->json(['data' => $tags], 201); 
+            
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 400);
         } catch (\Exception $e) {
