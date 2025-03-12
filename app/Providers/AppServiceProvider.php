@@ -13,6 +13,14 @@ use App\Repositories\CourseRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\CategoryRepository;
 
+/**
+ 
+*   @OA\Info(
+*   title="E-learning-API",
+*   version="1.0.0"
+*   )
+*/
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
