@@ -26,8 +26,13 @@ class TagController extends Controller
      */
     public function index()
     {
-        return response()->json($this->tagService->listTags());
-    }
+        try {
+            return response()->json($this->tagService->listTags());
+        } catch (\Exception $e) {
+            Log::error("Erreur lors de la récupération des tags : " . $e->getMessage());
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des tags.'], 500);
+        }
+    }   
             /**
      * @OA\Get(
      *     path="/api/v1/tags/{id}",
