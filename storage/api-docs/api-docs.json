@@ -156,6 +156,124 @@
                 }
             }
         },
+        "/api/v1/courses": {
+            "get": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Get a list of courses",
+                "operationId": "3522f88b734e2061541a8dbd0b6be53c",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Create a new course",
+                "operationId": "92ce73d19fae55890bc7e00c723b7557",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "duration",
+                                    "level",
+                                    "status",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Introduction to PHP"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn the basics of PHP"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "example": 120
+                                    },
+                                    "level": {
+                                        "type": "string",
+                                        "example": "Beginner"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "open"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "sub_category_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Course created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/api/v1/courses/{id}": {
+            "get": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Get a specific course",
+                "operationId": "0cc958d4649cdf4fa331958a855c4be4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Course found"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            }
+        },
         "/api/v1/tags": {
             "get": {
                 "tags": [
@@ -311,6 +429,10 @@
         {
             "name": "Category",
             "description": "Category"
+        },
+        {
+            "name": "Course",
+            "description": "Course"
         },
         {
             "name": "Tag",
