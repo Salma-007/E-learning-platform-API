@@ -5,18 +5,23 @@ namespace App\Models;
 use App\Models\Tag;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
+    use HasFactory;
+    
     protected $fillable = [
         'name', 'description', 'duration', 'level', 'status', 'category_id', 'sub_category_id'
     ];
 
-    public function category(){
+    public function category()
+    {
         return $this->belonsTo(Category::class);
     }
 
-    public function subCategory(){
+    public function subCategory()
+    {
         return $this->belonsTo(Category::class);
     }
 
@@ -24,4 +29,5 @@ class Course extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
 }

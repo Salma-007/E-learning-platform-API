@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CategoryController;
 
 Route::prefix('categories')->group(function () {
@@ -19,6 +20,14 @@ Route::prefix('tags')->group(function () {
     Route::post('/', [TagController::class, 'store']); 
     Route::put('/{id}', [TagController::class, 'update']); 
     Route::delete('/{id}', [TagController::class, 'destroy']); 
+});
+
+Route::prefix('courses')->group(function () {
+    Route::get('/', [CourseController::class, 'index']); 
+    // Route::get('/{id}', [TagController::class, 'show']); 
+    // Route::post('/', [TagController::class, 'store']); 
+    // Route::put('/{id}', [TagController::class, 'update']); 
+    // Route::delete('/{id}', [TagController::class, 'destroy']); 
 });
 
 Route::get('/user', function (Request $request) {
