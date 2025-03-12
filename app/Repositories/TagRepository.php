@@ -40,6 +40,6 @@ class TagRepository implements TagInterface{
     public function delete(int $id)
     {
         $tag = Tag::find($id);
-        return $tag ? $tag->delete($data) : false;
+        return $tag ? $tag->delete() : false;
     }
 }

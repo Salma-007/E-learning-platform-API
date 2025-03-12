@@ -93,6 +93,39 @@ class CourseController extends Controller
         return $this->courseService->createCourse($data);
     }
 
+
+        /**
+     * @OA\Put(
+     *     path="/api/v1/courses/{id}",
+     *     summary="Update an existing course",
+     *     tags={"Course"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the course",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "description", "duration", "level", "status", "category_id"},
+     *             @OA\Property(property="name", type="string", example="Advanced PHP"),
+     *             @OA\Property(property="description", type="string", example="Learn advanced PHP concepts"),
+     *             @OA\Property(property="duration", type="integer", example=180),
+     *             @OA\Property(property="level", type="string", example="Intermediate"),
+     *             @OA\Property(property="status", type="string", example="closed"),
+     *             @OA\Property(property="category_id", type="integer", example=1),
+     *             @OA\Property(property="sub_category_id", type="integer", example=2),
+     *             @OA\Property(property="tags", type="array", @OA\Items(type="integer"), example={1, 2})
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Course updated successfully"),
+     *     @OA\Response(response=400, description="Invalid input"),
+     *     @OA\Response(response=404, description="Course not found")
+     * )
+     */
+
     public function update(Request $request, $id)
     {
         $data = $request->validate([
@@ -110,6 +143,24 @@ class CourseController extends Controller
         return $this->courseService->updateCourse($id, $data);
     }
 
+
+        /**
+     * @OA\Delete(
+     *     path="/api/v1/courses/{id}",
+     *     summary="Delete a course",
+     *     tags={"Course"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the course",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Course deleted successfully"),
+     *     @OA\Response(response=404, description="Course not found")
+     * )
+     */
+    
     public function destroy($id)
     {
         $this->courseService->deleteCourse($id);
