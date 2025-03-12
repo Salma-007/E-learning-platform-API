@@ -20,7 +20,15 @@ class TagRepository implements TagInterface{
 
     public function create(array $data)
     {
-        return Tag::create($data);
+        if (isset($data['name']) && !empty($data['name'])) {
+            $tags = explode(',', $data['name']);
+
+            $tags = array_map('trim', $tags);
+
+            foreach ($tags as $tagName) {
+                Tag::create(['name' => $tagName]);
+            }
+        }
     }
 
     public function update(int $id, array $data)

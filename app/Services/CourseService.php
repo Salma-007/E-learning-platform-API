@@ -22,7 +22,7 @@ class CourseService
 
     public function getCourse($id)
     {
-        $course = $this->courseRepository->getById($id);
+        $course = $this->courseRepository->findById($id);
         return new CourseResource($course);
     }
 

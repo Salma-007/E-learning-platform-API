@@ -24,10 +24,10 @@ Route::prefix('tags')->group(function () {
 
 Route::prefix('courses')->group(function () {
     Route::get('/', [CourseController::class, 'index']); 
-    // Route::get('/{id}', [TagController::class, 'show']); 
-    // Route::post('/', [TagController::class, 'store']); 
-    // Route::put('/{id}', [TagController::class, 'update']); 
-    // Route::delete('/{id}', [TagController::class, 'destroy']); 
+    Route::get('/{id}', [CourseController::class, 'show']); 
+    Route::post('/', [CourseController::class, 'store']); 
+    Route::put('/{id}', [CourseController::class, 'update']); 
+    Route::delete('/{id}', [CourseController::class, 'destroy']); 
 });
 
 Route::get('/user', function (Request $request) {
