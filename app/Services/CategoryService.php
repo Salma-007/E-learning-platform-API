@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\CategoryInterface;
+use App\Http\Resources\CategoryResource;
 
 class CategoryService
 {
@@ -15,7 +16,8 @@ class CategoryService
 
     public function listCategories()
     {
-        return $this->categoryRepository->getAll();
+        $categories = $this->categoryRepository->getAll();
+        return CategoryResource::collection($categories);
     }
 
     public function getCategory(int $id)

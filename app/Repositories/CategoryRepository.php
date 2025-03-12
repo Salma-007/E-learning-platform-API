@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use App\Interfaces\CategoryInterface;
+use App\Http\Resources\CategoryResource;
 
 class CategoryRepository implements CategoryInterface
 {
@@ -11,6 +12,8 @@ class CategoryRepository implements CategoryInterface
     public function getAll()
     {
         return Category::all();
+        // $categories = Category::all();
+        // return CategoryResource::collection($categories);
     }
 
     public function findById(int $id)
