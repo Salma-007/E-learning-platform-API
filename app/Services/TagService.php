@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\TagInterface;
+use App\Http\Resources\TagResource;
 
 class TagService
 {
@@ -15,7 +16,8 @@ class TagService
 
     public function listTags()
     {
-        return $this->tagRepository->getAll();
+        $tags =  $this->tagRepository->getAll();
+        return TagResource::collection($tags);
     }
 
     public function getTag(int $id){

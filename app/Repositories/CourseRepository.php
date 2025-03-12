@@ -10,9 +10,45 @@ class CourseRepository implements CourseInterface
 {
     public function getAll()
     {
-        // $courses = Course::with(['category', 'subCategory'])->get();
-        // return CourseResource::collection($courses);
-        return Course::all();
+        return Course::with(['category', 'subCategory'])->get();
     }
+    
+    public function findById($id)
+    {
+        return Course::with(['category', 'subCategory'])->findOrFail($id);
+    }
+
+    public function create(array $data)
+    {
+        $course = Course::create($data);
+
+        if (isset($data['tags'])) {
+            $course->tags()->attach($data['tags']);
+        }
+
+        return $course;
+    }
+
+    public function update($id, array $data)
+    {
+        $course = Course::findOrFail($id);
+        $course->update($data);
+
+        if (isset($data['tags'])) {
+            $course->tags()->sync($data['tags']);
+        }
+
+        return $course;
+    }
+
+    public function delete($id)
+    {
+        $course = Course::findOrFail($id);
+        $course->tags()->detach();
+        $course->delete();
+
+        return true;
+    }
+    
 
 }

@@ -10,8 +10,7 @@ class TagRepository implements TagInterface{
 
     public function getAll()
     {
-        $tags = Tag::all();
-        return TagResource::collection($tags);
+        return Tag::all();
     }
 
     public function findById(int $id)

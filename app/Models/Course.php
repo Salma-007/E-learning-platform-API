@@ -17,12 +17,12 @@ class Course extends Model
 
     public function category()
     {
-        return $this->belonsTo(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function subCategory()
     {
-        return $this->belonsTo(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function tags()

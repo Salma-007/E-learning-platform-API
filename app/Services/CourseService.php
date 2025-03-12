@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\CourseInterface;
+use App\Http\Resources\CourseResource;
 
 class CourseService
 {
@@ -15,7 +16,31 @@ class CourseService
 
     public function listCourses()
     {
-        return $this->courseRepository->getAll();
+        $courses = $this->courseRepository->getAll();
+        return CourseResource::collection($courses);
+    }
+
+    public function getCourse($id)
+    {
+        $course = $this->courseRepository->getById($id);
+        return new CourseResource($course);
+    }
+
+    public function createCourse(array $data)
+    {
+        $course = $this->courseRepository->create($data);
+        return new CourseResource($course);
+    }
+
+    public function updateCourse($id, array $data)
+    {
+        $course = $this->courseRepository->update($id, $data);
+        return new CourseResource($course);
+    }
+
+    public function deleteCourse($id)
+    {
+        return $this->courseRepository->delete($id);
     }
 
 }
