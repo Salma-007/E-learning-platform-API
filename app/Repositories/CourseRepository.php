@@ -5,49 +5,77 @@ namespace App\Repositories;
 use App\Models\Course;
 use App\Interfaces\CourseInterface;
 use App\Http\Resources\CourseResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 
 class CourseRepository implements CourseInterface
 {
     public function getAll()
     {
-        return Course::with(['category', 'subCategory'])->get();
+        try {
+            return Course::with(['category', 'subCategory'])->get();
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la récupération des cours.");
+        }
     }
     
     public function findById($id)
     {
-        return Course::with(['category', 'subCategory'])->findOrFail($id);
+        try {
+            return Course::with(['category', 'subCategory'])->findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            throw new \Exception("Cours non trouvé avec l'ID : $id");
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la récupération du cours.");
+        }
     }
 
     public function create(array $data)
     {
-        $course = Course::create($data);
+        try {
+            $course = Course::create($data);
 
-        if (isset($data['tags'])) {
-            $course->tags()->attach($data['tags']);
+            if (isset($data['tags'])) {
+                $course->tags()->attach($data['tags']);
+            }
+
+            return $course;
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la création du cours.");
         }
-
-        return $course;
     }
 
     public function update($id, array $data)
     {
-        $course = Course::findOrFail($id);
-        $course->update($data);
+        try {
+            $course = Course::findOrFail($id);
+            $course->update($data);
 
-        if (isset($data['tags'])) {
-            $course->tags()->sync($data['tags']);
+            if (isset($data['tags'])) {
+                $course->tags()->sync($data['tags']);
+            }
+
+            return $course;
+        } catch (ModelNotFoundException $e) {
+            throw new \Exception("Cours non trouvé avec l'ID : $id");
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la mise à jour du cours.");
         }
-
-        return $course;
     }
 
     public function delete($id)
     {
-        $course = Course::findOrFail($id);
-        $course->tags()->detach();
-        $course->delete();
+        try {
+            $course = Course::findOrFail($id);
+            $course->tags()->detach();
+            $course->delete();
 
-        return true;
+            return true;
+        } catch (ModelNotFoundException $e) {
+            throw new \Exception("Cours non trouvé avec l'ID : $id");
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la suppression du cours.");
+        }
     }
     
 

@@ -2,44 +2,80 @@
 
 namespace App\Repositories;
 
+use Exception;
 use App\Models\Tag;
 use App\Interfaces\TagInterface;
 use App\Http\Resources\TagResource;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TagRepository implements TagInterface{
 
     public function getAll()
     {
-        return Tag::all();
+        try {
+            return Tag::all();
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la récupération des tags.");
+        }
     }
 
     public function findById(int $id)
     {
-        return Tag::find($id);
+        try {
+            $tag = Tag::find($id);
+            if (!$tag) {
+                throw new ModelNotFoundException("Tag non trouvé avec l'ID : $id");
+            }
+            return $tag;
+        } catch (ModelNotFoundException $e) {
+            throw new \Exception("Tag non trouvé avec l'ID : $id", 404);
+        } 
     }
 
     public function create(array $data)
     {
-        if (isset($data['name']) && !empty($data['name'])) {
-            $tags = explode(',', $data['name']);
+        try {
+            if (isset($data['name']) && !empty($data['name'])) {
+                $tags = explode(',', $data['name']);
+                $tags = array_map('trim', $tags);
 
-            $tags = array_map('trim', $tags);
-
-            foreach ($tags as $tagName) {
-                Tag::create(['name' => $tagName]);
+                foreach ($tags as $tagName) {
+                    $createdTags[] = Tag::create(['name' => $tagName]);
+                }
             }
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la création des tags.");
         }
     }
 
     public function update(int $id, array $data)
     {
-        $tag = Tag::find($id);
-        return $tag ? $tag->update($data) : false;
+        try {
+            $tag = Tag::find($id);
+            if (!$tag) {
+                throw new ModelNotFoundException("Tag non trouvé avec l'ID : $id");
+            }
+            return $tag->update($data);
+        } catch (ModelNotFoundException $e) {
+            throw new \Exception("Tag non trouvé avec l'ID : $id", 404);
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la mise à jour du tag.");
+        }
     }
 
     public function delete(int $id)
     {
-        $tag = Tag::find($id);
-        return $tag ? $tag->delete() : false;
+        try {
+            $tag = Tag::find($id);
+            if (!$tag) {
+                throw new ModelNotFoundException("Tag non trouvé avec l'ID : $id");
+            }
+            return $tag->delete();
+        } catch (ModelNotFoundException $e) {
+            throw new \Exception("Tag non trouvé avec l'ID : $id", 404);
+        } catch (QueryException $e) {
+            throw new \Exception("Une erreur s'est produite lors de la suppression du tag.");
+        }
     }
 }
