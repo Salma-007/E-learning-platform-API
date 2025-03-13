@@ -86,8 +86,10 @@ class CategoryController extends Controller
                 'name' => 'required|string|max:255|unique:categories,name',
                 'parent_id' => 'nullable|exists:categories,id',
             ]);
-
-            return response()->json($this->categoryService->createCategory($validated), 201);
+    
+            $category = $this->categoryService->createCategory($validated); 
+            return response()->json(['data' => $category], 201);
+            
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 400);
         } catch (Exception $e) {

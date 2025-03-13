@@ -87,7 +87,7 @@ class TagController extends Controller
 
             $tags = $this->tagService->createTag($validated); 
             return response()->json(['data' => $tags], 201); 
-            
+
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 400);
         } catch (\Exception $e) {
@@ -96,7 +96,7 @@ class TagController extends Controller
     }
 
 
-            /**
+     /**
      * @OA\Put(
      *     path="/api/v1/tags/{id}",
      *     summary="Update a Tag",
