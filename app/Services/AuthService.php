@@ -16,7 +16,7 @@ class AuthService
     {
         try{
             return $this->authRepository->register($data);
-            
+
         } catch (\Throwable $th) {
             throw new \Exception("Erreur lors de register : " . $th->getMessage());
         }
@@ -33,10 +33,11 @@ class AuthService
         
     }
 
-    public function logout($user)
+    public function logout()
     { 
         try{
-            return $this->authRepository->logout($user);
+            return $this->authRepository->logout();
+
         } catch (\Throwable $th) {
             throw new \Exception("Erreur lors de logout : " . $th->getMessage());
         }

@@ -24,6 +24,12 @@ class User extends Authenticatable
         'password',
     ];
 
+    // Dans le modèle User
+    public function tokens()
+    {
+        return $this->hasMany(Sanctum::personalAccessTokenModel(), 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
