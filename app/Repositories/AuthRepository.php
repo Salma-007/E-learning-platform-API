@@ -1,31 +1,52 @@
 <?php
 namespace App\Repositories;
 
-use App\Interfaces\AuthRepositoryInterface;
+use Exception;
+use Throwable;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Interfaces\AuthRepositoryInterface;
 
 class AuthRepository implements AuthRepositoryInterface
 {
     public function register(array $data)
     {
-        $data['password'] = Hash::make($data['password']);
-        return User::create($data);
+        try{
+            $data['password'] = Hash::make($data['password']);
+            $user = User::create($data);
+            $token = $user->createToken("API TOKEN")->plainTextToken;
+            return ['user' => $user, 'token' => $token];
+
+        } catch (\Throwable $th) {
+            throw new \Exception("Erreur lors de register : " . $th->getMessage());
+        }
+
     }
 
     public function login(array $credentials)
     {
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('auth-token')->plainTextToken;
-            return ['user' => $user, 'token' => $token];
+        try{
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                $token = $user->createToken('auth-token')->plainTextToken;
+                return ['user' => $user, 'token' => $token];
+            }
+            return null;
+        } catch (Throwable $th) {
+            throw new Exception("Erreur lors de login : " . $th->getMessage());
         }
-        return null;
+
     }
 
     public function logout($user)
     {
-        $user->tokens()->delete();
+        try{
+            $user->tokens()->delete();
+
+        } catch (\Throwable $th) {
+            throw new \Exception("Erreur lors de logout : " . $th->getMessage());
+        }
+        
     }
 }

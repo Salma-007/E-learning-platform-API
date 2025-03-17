@@ -17,38 +17,67 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
+        try {
+            $data = $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string|min:6',
+            ]);
 
-        $user = $this->authService->register($data);
+            $user = $this->authService->register($data);
 
-        return response()->json(['user' => $user], 201);
+            return response()->json([
+                'user' => $user['user'],
+                'token' => $user['token'],
+            ], 201);
+
+        } catch (ValidationException $e) {
+
+            return response()->json(['error' => $e->errors()], 422);
+
+        } catch (Exception $e) {
+
+            return response()->json(['error' => 'An error occurred during registration.'], 500);
+        }
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
 
-        $result = $this->authService->login($credentials);
+            $result = $this->authService->login($credentials);
 
-        if ($result) {
-            return response()->json($result);
+            if ($result) {
+                return response()->json($result);
+            }
+
+            return response()->json(['error' => 'Invalid credentials'], 401);
+
+        } catch (ValidationException $e) {
+
+            return response()->json(['error' => $e->errors()], 422);
+
+        } catch (Exception $e) {
+
+            return response()->json(['error' => 'An error occurred during login.'], 500);
         }
-
-        return response()->json(['error' => 'Invalid credentials'], 401);
     }
 
     public function logout(Request $request)
     {
-        $this->authService->logout($request->user());
+        try {
+            $this->authService->logout($request->user());
 
-        return response()->json(['message' => 'Logged out successfully']);
-    }
+            return response()->json(['message' => 'Logged out successfully']);
+            
+        } catch (Exception $e) {
+
+            return response()->json(['error' => 'An error occurred during logout.'], 500);
+        }
+    }   
 }
 

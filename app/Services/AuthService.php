@@ -14,16 +14,31 @@ class AuthService
 
     public function register(array $data)
     {
-        return $this->authRepository->register($data);
+        try{
+            return $this->authRepository->register($data);
+            
+        } catch (\Throwable $th) {
+            throw new \Exception("Erreur lors de register : " . $th->getMessage());
+        }
+        
     }
 
     public function login(array $credentials)
     {
-        return $this->authRepository->login($credentials);
+        try{
+            return $this->authRepository->login($credentials);
+        } catch (\Throwable $th) {
+            throw new \Exception("Erreur lors de login : " . $th->getMessage());
+        }
+        
     }
 
     public function logout($user)
-    {
-        return $this->authRepository->logout($user);
+    { 
+        try{
+            return $this->authRepository->logout($user);
+        } catch (\Throwable $th) {
+            throw new \Exception("Erreur lors de logout : " . $th->getMessage());
+        }
     }
 }
