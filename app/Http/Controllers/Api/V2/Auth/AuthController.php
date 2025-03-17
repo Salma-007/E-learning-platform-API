@@ -48,21 +48,20 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required|string',
             ]);
-
+    
             $result = $this->authService->login($credentials);
-
+    
             if ($result) {
                 return response()->json($result);
             }
-
+    
             return response()->json(['error' => 'Invalid credentials'], 401);
 
         } catch (ValidationException $e) {
-
+            
             return response()->json(['error' => $e->errors()], 422);
 
         } catch (Exception $e) {
-
             return response()->json(['error' => 'An error occurred during login.'], 500);
         }
     }
