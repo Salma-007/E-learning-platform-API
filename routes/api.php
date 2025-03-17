@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\TagController;
+use App\Http\Controllers\Api\V2\RoleController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
+use App\Http\Controllers\Api\V2\PermissionController;
 
 
 Route::prefix('v2')->group(function () {
@@ -13,6 +15,16 @@ Route::prefix('v2')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/roles', [RoleController::class, 'index']);
+    Route::post('/roles', [RoleController::class, 'store']);
+    Route::put('/roles/{id}', [RoleController::class, 'update']);
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+    Route::get('/permissions', [PermissionController::class, 'index']);
+    Route::post('/permissions', [PermissionController::class, 'store']); 
+    Route::put('/permissions/{id}', [PermissionController::class, 'update']); 
+    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy']);
     
 });
 
