@@ -30,7 +30,7 @@ class CourseController extends Controller
         try {
             return response()->json($this->courseService->listCourses());
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des cours.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
