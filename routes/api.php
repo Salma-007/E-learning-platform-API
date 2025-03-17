@@ -20,11 +20,14 @@ Route::prefix('v2')->group(function () {
     Route::post('/roles', [RoleController::class, 'store']);
     Route::put('/roles/{id}', [RoleController::class, 'update']);
     Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
-
-    Route::get('/permissions', [PermissionController::class, 'index']);
-    Route::post('/permissions', [PermissionController::class, 'store']); 
-    Route::put('/permissions/{id}', [PermissionController::class, 'update']); 
-    Route::delete('/permissions/{id}', [PermissionController::class, 'destroy']);
+    
+    Route::prefix('permissions')->group(function () {
+        Route::get('/', [PermissionController::class, 'index']);
+        Route::post('/', [PermissionController::class, 'store']); 
+        Route::put('/{id}', [PermissionController::class, 'update']); 
+        Route::get('/{id}', [PermissionController::class, 'show']); 
+        Route::delete('/{id}', [PermissionController::class, 'destroy']);
+    }); 
     
 });
 

@@ -58,4 +58,17 @@ class PermissionController extends Controller
 
         return response()->json(['message' => 'Permission supprimée avec succès']);
     }
+
+    public function show($id)
+    {
+        try {
+            $permission = Permission::find($id);
+            if (!$permission) {
+                throw new ModelNotFoundException("permission non trouvé avec l'ID : $id");
+            }
+            return response()->json(["id" => $permission->id,"name" => $permission->name]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération du cours.'], 500);
+        }
+    }
 }
