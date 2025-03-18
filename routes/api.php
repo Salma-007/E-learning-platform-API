@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V2\RoleController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
+use App\Http\Controllers\Api\V2\Auth\UserController;
 use App\Http\Controllers\Api\V2\PermissionController;
 
 
@@ -16,11 +17,13 @@ Route::prefix('v2')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/roles', [RoleController::class, 'index']);
-    Route::post('/roles', [RoleController::class, 'store']);
-    Route::put('/roles/{id}', [RoleController::class, 'update']);
-    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
-    
+    Route::prefix('roles')->group(function () {
+        Route::get('/', [RoleController::class, 'index']);
+        Route::post('/', [RoleController::class, 'store']);
+        Route::put('/{id}', [RoleController::class, 'update']);
+        Route::delete('/{id}', [RoleController::class, 'destroy']);
+    }); 
+
     Route::prefix('permissions')->group(function () {
         Route::get('/', [PermissionController::class, 'index']);
         Route::post('/', [PermissionController::class, 'store']); 
@@ -28,6 +31,8 @@ Route::prefix('v2')->group(function () {
         Route::get('/{id}', [PermissionController::class, 'show']); 
         Route::delete('/{id}', [PermissionController::class, 'destroy']);
     }); 
+
+    Route::get('/users/{user}', [UserController::class, 'show']);
     
 });
 
