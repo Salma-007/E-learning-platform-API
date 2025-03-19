@@ -14,6 +14,11 @@ class AuthRepository implements AuthRepositoryInterface
     {
         try{
             $data['password'] = Hash::make($data['password']);
+            
+            if (!isset($data['role_id'])) {
+                throw new \Exception("Le champ role_id est manquant.");
+            }
+
             $user = User::create($data);
             $token = $user->createToken("API TOKEN")->plainTextToken;
             return ['user' => $user, 'token' => $token];

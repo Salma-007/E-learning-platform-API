@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api\V2\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Services\AuthService;
 use Illuminate\Http\Request;
+use App\Services\AuthService;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -18,12 +19,21 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            $data = $request->validate([
-                'name' => 'required|string',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|string|min:6',
-            ]);
+                $data = $request->validate([
+                    'name' => 'required|string',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required|string|min:6',
+                    'role' => 'required|string|in:student,mentor', 
+                ]);
+            
+            $role = Role::where('name', $data['role'])->first();
 
+            if (!$role) {
+                return response()->json(['error' => 'Rôle invalide.'], 400);
+            }
+
+            $data['role_id'] = $role->id;
+            
             $user = $this->authService->register($data);
 
             return response()->json([

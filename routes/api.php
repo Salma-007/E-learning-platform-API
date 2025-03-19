@@ -33,6 +33,7 @@ Route::prefix('v2')->group(function () {
     }); 
 
     Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
     
 });
 

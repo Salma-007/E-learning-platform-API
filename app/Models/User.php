@@ -8,6 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -25,13 +26,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     // Dans le modèle User
+    // public function tokens()
+    // {
+    //     return $this->hasMany(Sanctum::personalAccessTokenModel(), 'user_id');
+    // }
+
     public function tokens()
     {
-        return $this->hasMany(Sanctum::personalAccessTokenModel(), 'user_id');
+        return $this->morphMany(PersonalAccessToken::class, 'tokenable');
     }
+
 
     // Relation avec Role
     public function role()
