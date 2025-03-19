@@ -25,6 +25,7 @@ class AuthController extends Controller
                     'email' => 'required|email|unique:users',
                     'password' => 'required|string|min:6',
                     'role' => 'required|string|in:student,mentor', 
+                    'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 ]);
             
             $role = Role::where('name', $data['role'])->first();
@@ -34,6 +35,10 @@ class AuthController extends Controller
             }
 
             $data['role_id'] = $role->id;
+
+            if ($request->hasFile('profile_image')) {
+                $data['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+            }
             
             $user = $this->authService->register($data);
 
