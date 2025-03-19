@@ -41,7 +41,7 @@ Route::prefix('v2')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll']);
+        Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->middleware('role:student');
         Route::get('/courses/{course}/enrollments', [EnrollmentController::class, 'index']);
     });
 });

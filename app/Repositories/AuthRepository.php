@@ -20,6 +20,7 @@ class AuthRepository implements AuthRepositoryInterface
             }
 
             $user = User::create($data);
+            $user->assignRole($data['role_id']);
             $token = $user->createToken("API TOKEN")->plainTextToken;
             return ['user' => $user, 'token' => $token];
 
