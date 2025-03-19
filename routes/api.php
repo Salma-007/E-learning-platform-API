@@ -39,7 +39,7 @@ Route::prefix('v2')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/edit', [UserController::class, 'update']);
-        Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
+        Route::post('/users/{user}', [UserController::class, 'updateUser']);
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
     });
     
