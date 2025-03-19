@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MentorController;
 use App\Http\Controllers\StatesController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Api\V1\TagController;
@@ -41,15 +42,18 @@ Route::prefix('v2')->group(function () {
         Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
     });
-
+    
     Route::get('/students/{id}/courses', [StudentController::class, 'enrolledCourses']);
     
     Route::middleware('auth:sanctum')->group(function () {
+
+        Route::get('/mentors/{id}/courses', [MentorController::class, 'mentorCourses'])->middleware('role:mentor');
         Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->middleware('role:student');
         Route::get('/courses/{course}/enrollments', [EnrollmentController::class, 'index']);
         Route::get('/stats/courses', [StatesController::class, 'courseStatistics'])->middleware('role:admin');
         Route::get('/stats/categories', [StatesController::class, 'categorieStatistics'])->middleware('role:admin');
         Route::get('/stats/tags', [StatesController::class, 'tagStatistics'])->middleware('role:admin');
+    
     });
 });
 
