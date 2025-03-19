@@ -74,7 +74,12 @@ Route::prefix('v1')->group(function () {
     Route::prefix('courses')->group(function () {
         Route::get('/', [CourseController::class, 'index']); 
         Route::get('/{id}', [CourseController::class, 'show']); 
-        Route::post('/', [CourseController::class, 'store'])->middleware('role:mentor'); 
+
+        Route::middleware('auth:sanctum')->group(function () 
+        {
+            Route::post('/', [CourseController::class, 'store'])->middleware('role:mentor'); 
+        });
+
         Route::put('/{id}', [CourseController::class, 'update']); 
         Route::delete('/{id}', [CourseController::class, 'destroy']); 
     });

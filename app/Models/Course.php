@@ -13,7 +13,7 @@ class Course extends Model
     use HasFactory;
     
     protected $fillable = [
-        'name', 'description', 'duration', 'level', 'status', 'category_id', 'sub_category_id'
+        'name', 'description', 'duration', 'level', 'status', 'category_id', 'sub_category_id','user_id'
     ];
 
     public function category()
@@ -34,6 +34,11 @@ class Course extends Model
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 }
