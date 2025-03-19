@@ -39,7 +39,7 @@ Route::prefix('v2')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/edit', [UserController::class, 'update']);
-        Route::post('/users/{user}', [UserController::class, 'updateUser']);
+        Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
     });
     
@@ -47,7 +47,7 @@ Route::prefix('v2')->group(function () {
     
     Route::middleware('auth:sanctum')->group(function () {
 
-        Route::get('/mentors/{id}/courses', [MentorController::class, 'mentorCourses'])->middleware('role:mentor');
+        Route::get('/mentors/{id}/courses', [MentorController::class, 'mentorCourses']);
         Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->middleware('role:student');
         Route::get('/courses/{course}/enrollments', [EnrollmentController::class, 'index']);
         Route::get('/stats/courses', [StatesController::class, 'courseStatistics'])->middleware('role:admin');

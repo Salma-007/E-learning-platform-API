@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,9 @@ class MentorController extends Controller
         try {
             $mentor = User::findOrFail($id);
 
-            if (!$mentor->isMentor()) {
-                return response()->json(['error' => 'Cet utilisateur n\'est pas un mentor.'], 403);
-            }
+            // if (!$mentor->isMentor()) {
+            //     return response()->json(['error' => 'Cet utilisateur n\'est pas un mentor.'], 403);
+            // }
 
             $courses = $mentor->coursesMentor;
 
@@ -22,7 +23,7 @@ class MentorController extends Controller
                 'mentor_id' => $mentor->id,
                 'courses' => $courses,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => 'Une erreur s\'est produite.'], 500);
         }
     }
