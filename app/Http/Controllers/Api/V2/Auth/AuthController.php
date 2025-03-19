@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -79,13 +80,19 @@ class AuthController extends Controller
     public function logout()
     {
         try {
+            $user = auth()->user();
+    
+            if (!$user) {
+                return response()->json(['error' => 'Utilisateur non authentifié', 'headers' => request()->headers->all()], 401);
+            }
 
-            $this->authService->logout();
+            $user->tokens()->delete();
 
+            Auth::guard('web')->logout(); 
+    
             return response()->json(['message' => 'Logged out successfully']);
             
         } catch (Exception $e) {
-
             return response()->json(['error' => 'An error occurred during logout.'], 500);
         }
     }   

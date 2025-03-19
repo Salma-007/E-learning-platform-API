@@ -53,6 +53,8 @@ class UserController extends Controller
     public function updateUser(Request $request, User $user)
     {
         try {
+            // $a = $user->role();
+            // return response()->json([$a]);
             $userAuth = auth()->user();
 
             if (!$userAuth) {
@@ -83,7 +85,6 @@ class UserController extends Controller
             return response()->json([
                 'errors' => $e->errors()
             ], 422);
-    
         }
     }
 

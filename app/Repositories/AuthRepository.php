@@ -47,7 +47,7 @@ class AuthRepository implements AuthRepositoryInterface
     public function logout()
     {
         try {
-            Auth::logout();
+            Auth::guard('web')->logout();
 
             if (Auth::check()) {
                 Auth::user()->tokens()->delete(); 
