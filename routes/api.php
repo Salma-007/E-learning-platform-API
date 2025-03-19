@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\TagController;
+use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\Api\V2\RoleController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\CategoryController;
@@ -32,9 +33,16 @@ Route::prefix('v2')->group(function () {
         Route::delete('/{id}', [PermissionController::class, 'destroy']);
     }); 
 
-    Route::get('/users/{user}', [UserController::class, 'show']);
-    Route::put('/users/{user}', [UserController::class, 'update']);
-    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/users/{user}', [UserController::class, 'show']);
+        Route::put('/users/edit', [UserController::class, 'update']);
+        Route::post('/users/{user}', [UserController::class, 'updateUser']);
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->middleware('role:student');
+        Route::get('/courses/{course}/enrollments', [EnrollmentController::class, 'index']);
+    });
 });
 
 Route::prefix('v1')->group(function () {
@@ -58,11 +66,12 @@ Route::prefix('v1')->group(function () {
     Route::prefix('courses')->group(function () {
         Route::get('/', [CourseController::class, 'index']); 
         Route::get('/{id}', [CourseController::class, 'show']); 
-        Route::post('/', [CourseController::class, 'store']); 
+        Route::post('/', [CourseController::class, 'store'])->middleware('role:mentor'); 
         Route::put('/{id}', [CourseController::class, 'update']); 
         Route::delete('/{id}', [CourseController::class, 'destroy']); 
     });
-    
+
+
 });
 
 

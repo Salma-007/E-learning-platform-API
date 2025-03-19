@@ -17,15 +17,54 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
         try {
-            if (!$request->user()) {
-                return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+            $user = auth()->user();
+
+            if (!$user) {
+                return response()->json(['error' => 'Utilisateur non authentifié', 'headers' => request()->headers->all()], 401);
             }
             
-            if ($request->user()->id !== $user->id) {
-                return response()->json(['error' => 'Action non autorisée'], 403);
+            // if ($request->user()->id !== $user->id) {
+            //     return response()->json(['error' => 'Action non autorisée'], 403);
+            // }
+
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,'.$user->id,
+            ]);
+
+            $user->update($validatedData);
+
+            return response()->json([
+                'user' => new UserResource($user),
+                'message' => 'Profil mis à jour avec succès'
+            ]);
+    
+        } catch (ValidationException $e) {
+            return response()->json([
+                'errors' => $e->errors()
+            ], 422);
+    
+        }
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        try {
+            $userAuth = auth()->user();
+
+            if (!$userAuth) {
+                return response()->json(['error' => 'Utilisateur non authentifié', 'headers' => request()->headers->all()], 401);
+            }
+            
+            // if ($request->user()->id !== $user->id) {
+            //     return response()->json(['error' => 'Action non autorisée'], 403);
+            // }
+
+            if(!$user->isAdmin()){
+                return response()->json(['error' => 'Vous n \'avez pas role Admin']);
             }
 
             $validatedData = $request->validate([
