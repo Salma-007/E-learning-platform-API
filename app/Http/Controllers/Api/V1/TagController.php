@@ -33,7 +33,8 @@ class TagController extends Controller
             return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des tags.'], 500);
         }
     }   
-            /**
+    
+      /**
      * @OA\Get(
      *     path="/api/v1/tags/{id}",
      *     summary="Get tag details",

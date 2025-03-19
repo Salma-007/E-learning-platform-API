@@ -86,6 +86,12 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         try {
+            $user = auth()->user();
+    
+            if (!$user) {
+                return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+            }
+    
             $data = $request->validate([
                 'name' => 'required|string',
                 'description' => 'required|string',
@@ -97,7 +103,9 @@ class CourseController extends Controller
                 'tags' => 'nullable|array',
                 'tags.*' => 'exists:tags,id',
             ]);
-
+    
+            $data['user_id'] = $user->id;
+    
             return response()->json($this->courseService->createCourse($data), 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 400);
@@ -105,7 +113,6 @@ class CourseController extends Controller
             return response()->json(['error' => 'Une erreur s\'est produite lors de la création du cours.'], 500);
         }
     }
-
 
         /**
      * @OA\Put(

@@ -34,14 +34,14 @@ class CourseRepository implements CourseInterface
     {
         try {
             $course = Course::create($data);
-
+    
             if (isset($data['tags'])) {
                 $course->tags()->attach($data['tags']);
             }
-
+    
             return $course;
         } catch (QueryException $e) {
-            throw new \Exception("Une erreur s'est produite lors de la création du cours.");
+            throw new \Exception("Une erreur s'est produite ");
         }
     }
 
