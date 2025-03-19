@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Course;
 use App\Models\Enrollment;
 use Laravel\Sanctum\Sanctum;
 use Laravel\Sanctum\HasApiTokens;
@@ -46,6 +47,11 @@ class User extends Authenticatable
         return $this->hasMany(Enrollment::class);
     }
 
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments');
+    }
+
 
     // Relation avec Role
     public function role()
@@ -61,6 +67,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
     }
 
     /**
