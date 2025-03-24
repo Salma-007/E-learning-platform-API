@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Badge;
 use App\Models\Course;
 use App\Models\Enrollment;
 use Laravel\Sanctum\Sanctum;
@@ -79,6 +80,21 @@ class User extends Authenticatable
     public function isStudent(): bool
     {
         return $this->role === 'student';
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
+    }
+
+    public function createdCourses()
+    {
+        return $this->hasMany(Course::class, 'user_id');
+    }
+
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments');
     }
 
     /**

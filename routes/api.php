@@ -9,6 +9,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\Api\V2\RoleController;
+use App\Http\Controllers\Api\V2\BadgeController;
 use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
@@ -17,6 +18,14 @@ use App\Http\Controllers\Api\V2\PermissionController;
 
 
 Route::prefix('v2')->group(function () {
+
+    Route::post('/badges', [BadgeController::class, 'createBadge']);
+
+    Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
+
+    Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge']);
+
+    Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
 
     Route::post('/courses/{id}/videos', [CourseController::class, 'addVideoToCourse']);
     Route::get('/courses/{id}/videos', [CourseController::class, 'listVideosOfCourse']);
