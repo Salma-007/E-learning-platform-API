@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Tag;
+use App\Models\Video;
 use App\Models\Category;
 use App\Models\Enrollment;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,11 @@ class Course extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
     }
 
 }
