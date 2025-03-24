@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\V2;
 
+use Exception;
 use App\Models\User;
+use App\Models\Badge;
 use App\Services\BadgeService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class BadgeController extends Controller
 {
@@ -60,24 +63,23 @@ class BadgeController extends Controller
      *     @OA\Response(response=403, description="Non autorisé")
      * )
      */
+        // creer un badge par l'admin ( le role est verifié par middlware)
     public function createBadge(Request $request)
     {
         try {
-            $this->authorize('create', Badge::class);
 
             $data = $request->validate([
                 'name' => 'required|string',
                 'description' => 'required|string',
-                'image_url' => 'nullable|url',
                 'type' => 'required|in:student,mentor',
-                'condition_type' => 'required|string',
-                'condition_value' => 'required|integer',
+                'condition_type' => 'nullable|string',
+                'condition_value' => 'nullable|integer',
             ]);
 
             $badge = Badge::create($data);
 
             return response()->json($badge, 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -89,7 +91,7 @@ class BadgeController extends Controller
             
             $badges = $this->badgeService->checkStudentBadges($id);
             return response()->json($badges);
-            
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

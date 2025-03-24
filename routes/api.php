@@ -19,12 +19,6 @@ use App\Http\Controllers\Api\V2\PermissionController;
 
 Route::prefix('v2')->group(function () {
   
-    Route::post('/badges', [BadgeController::class, 'createBadge']);
-
-    Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
-
-    Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge']);
-
     Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
 
     Route::post('/courses/{id}/videos', [CourseController::class, 'addVideoToCourse']);
@@ -57,6 +51,10 @@ Route::prefix('v2')->group(function () {
         Route::put('/users/edit', [UserController::class, 'update']);
         Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
+
+        Route::post('/badges', [BadgeController::class, 'createBadge']);
+        Route::put('/badges/{id}', [BadgeController::class, 'updateBadge'])->middleware('role:admin');
+        Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge'])->middleware('role:admin');
     });
     
     Route::get('/students/{id}/courses', [StudentController::class, 'enrolledCourses']);
