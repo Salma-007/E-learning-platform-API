@@ -18,18 +18,18 @@ class VideoController extends Controller
             $data = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'video_file' => 'required|file|mimes:mp4,mov,avi|max:102400', 
+                'video_file' => 'required|url', 
             ]);
 
             $course = Course::findOrFail($courseId);
 
-            $videoPath = $request->file('video_file')->store('videos', 'public');
+            // $videoPath = $request->file('video_file')->store('videos', 'public');
 
             $video = Video::create([
                 'course_id' => $course->id,
                 'title' => $data['title'],
                 'description' => $data['description'],
-                'file_path' => $videoPath,
+                'file_path' => $data['video_file'],
             ]);
 
             return response()->json([
@@ -40,7 +40,7 @@ class VideoController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'Cours non trouvé.'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Une erreur s\'est produite.'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

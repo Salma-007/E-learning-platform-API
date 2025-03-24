@@ -387,6 +387,202 @@
                 }
             }
         },
+        "/api/v1/courses/{id}/videos": {
+            "get": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "List videos of a course",
+                "operationId": "f685f47834004bb2f2c23c4e02c1d4e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Add a video to a course",
+                "operationId": "351215a29b624480291d20bed1adf70f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Introduction to PHP"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/video.mp4"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn the basics of PHP"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Video added successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/videos/{id}": {
+            "get": {
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Get details of a video",
+                "operationId": "901d41fdab5cc7f1f3b93f7bdf87bc3e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video found"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Update a video",
+                "operationId": "97ebea3ba7bfc4c43f57d5e5bbcde4fa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Advanced PHP"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/video.mp4"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn advanced PHP concepts"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Video updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Delete a video",
+                "operationId": "86a75ed2268a0811293bb3d113d564dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video deleted successfully"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            }
+        },
         "/api/v1/tags": {
             "get": {
                 "tags": [
@@ -1300,6 +1496,10 @@
         {
             "name": "Course",
             "description": "Course"
+        },
+        {
+            "name": "Video",
+            "description": "Video"
         },
         {
             "name": "Tag",

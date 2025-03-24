@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Tag;
+use App\Models\Video;
 use App\Models\Category;
 use App\Models\Enrollment;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ class Course extends Model
     use HasFactory;
     
     protected $fillable = [
-        'name', 'description', 'duration', 'level', 'status', 'category_id', 'sub_category_id','user_id'
+        'name', 'description', 'duration', 'level', 'status', 'category_id', 'sub_category_id','user_id','price'
     ];
 
     public function category()
@@ -41,4 +42,13 @@ class Course extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
+
+    public function students()
+{
+    return $this->belongsToMany(User::class, 'enrollments');
+}
 }
