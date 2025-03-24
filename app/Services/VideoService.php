@@ -17,7 +17,7 @@ class VideoService
     public function addVideoToCourse($courseId, array $data)
     {
         $data['course_id'] = $courseId;
-        return $this->videoRepository->create($data);
+        return $this->videoRepository->create($data);   
     }
 
     public function getVideosByCourseId($courseId)

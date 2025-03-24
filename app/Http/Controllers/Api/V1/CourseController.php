@@ -231,7 +231,7 @@ class CourseController extends Controller
         try {
             $data = $request->validate([
                 'title' => 'required|string',
-                'url' => 'required|string',
+                'video_file' => 'required|url', 
                 'description' => 'nullable|string',
             ]);
 
