@@ -18,6 +18,12 @@ use App\Http\Controllers\Api\V2\PermissionController;
 
 Route::prefix('v2')->group(function () {
 
+    Route::post('/courses/{id}/videos', [CourseController::class, 'addVideoToCourse']);
+    Route::get('/courses/{id}/videos', [CourseController::class, 'listVideosOfCourse']);
+    Route::get('/videos/{id}', [CourseController::class, 'getVideo']);
+    Route::put('/videos/{id}', [CourseController::class, 'updateVideo']);
+    Route::delete('/videos/{id}', [CourseController::class, 'deleteVideo']);
+
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
