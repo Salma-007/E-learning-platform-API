@@ -20,9 +20,7 @@ use App\Http\Controllers\Api\V2\PermissionController;
 Route::prefix('v2')->group(function () {
 
     Route::post('/badges', [BadgeController::class, 'createBadge']);
-
     Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
-
     Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge']);
 
     Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
