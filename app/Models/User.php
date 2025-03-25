@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Badge;
 use App\Models\Course;
+use App\Models\Payment;
 use App\Models\Enrollment;
 use Laravel\Sanctum\Sanctum;
 use Laravel\Cashier\Billable;
@@ -40,6 +41,19 @@ class User extends Authenticatable
     //     return $this->hasMany(Sanctum::personalAccessTokenModel(), 'user_id');
     // }
 
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'payments')
+                   ->using(Payment::class)
+                   ->withPivot(['status', 'amount']);
+    }
+    
     public function tokens()
     {
         return $this->morphMany(PersonalAccessToken::class, 'tokenable');
@@ -50,10 +64,10 @@ class User extends Authenticatable
         return $this->hasMany(Enrollment::class);
     }
 
-    public function courses()
-    {
-        return $this->belongsToMany(Course::class, 'enrollments');
-    }
+    // public function courses()
+    // {
+    //     return $this->belongsToMany(Course::class, 'enrollments');
+    // }
 
     public function coursesMentor()
     {

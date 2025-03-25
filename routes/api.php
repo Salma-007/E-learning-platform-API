@@ -11,10 +11,19 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\Api\V2\RoleController;
 use App\Http\Controllers\Api\V2\BadgeController;
 use App\Http\Controllers\Api\V1\CourseController;
+use App\Http\Controllers\Api\V3\PaymentController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
 use App\Http\Controllers\Api\V2\Auth\UserController;
 use App\Http\Controllers\Api\V2\PermissionController;
+
+
+
+Route::prefix('v3')->middleware('auth:sanctum')->group(function () {
+    Route::get('/payments/checkout', [PaymentController::class, 'checkout']);
+    Route::get('/payments/status/{id}', [PaymentController::class, 'status']);
+    Route::get('/payments/history', [PaymentController::class, 'history']);
+});
 
 
 Route::prefix('v2')->group(function () {
