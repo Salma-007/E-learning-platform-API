@@ -53,7 +53,7 @@ Route::prefix('v2')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
 
         Route::post('/badges', [BadgeController::class, 'createBadge']);
-        Route::put('/badges/{id}', [BadgeController::class, 'updateBadge'])->middleware('role:admin');
+        Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
         Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge'])->middleware('role:admin');
     });
     

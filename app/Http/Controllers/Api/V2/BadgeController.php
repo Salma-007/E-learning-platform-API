@@ -84,6 +84,29 @@ class BadgeController extends Controller
         }
     }
 
+    // modification du badge
+    public function updateBadge(Request $request, $id)
+    {
+        try {
+
+            $badge = Badge::findOrFail($id);
+
+            $data = $request->validate([
+                'name' => 'nullable|string',
+                'description' => 'nullable|string',
+                'type' => 'nullable|in:student,mentor',
+                'condition_type' => 'nullable|string',
+                'condition_value' => 'nullable|integer',
+            ]);
+
+            $badge->update($data);
+
+            return response()->json($badge);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
 
     public function getaUserBadges($id)
     {

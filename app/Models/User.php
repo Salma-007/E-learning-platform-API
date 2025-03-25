@@ -7,6 +7,7 @@ use App\Models\Badge;
 use App\Models\Course;
 use App\Models\Enrollment;
 use Laravel\Sanctum\Sanctum;
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -18,7 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, Billable;
 
     /**
      * The attributes that are mass assignable.
