@@ -82,50 +82,9 @@ class BadgeService
     }
 
     // creer un badge par l'admin ( le role est verifié par middlware)
-    public function createBadge(Request $request)
-    {
-        try {
 
-            $data = $request->validate([
-                'name' => 'required|string',
-                'description' => 'required|string',
-                'image_url' => 'nullable|url',
-                'type' => 'required|in:student,mentor',
-                'condition_type' => 'required|string',
-                'condition_value' => 'required|integer',
-            ]);
 
-            $badge = Badge::create($data);
-
-            return response()->json($badge, 201);
-        } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
-    }
-
-    // modification du badge
-    public function updateBadge(Request $request, $id)
-    {
-        try {
-
-            $badge = Badge::findOrFail($id);
-
-            $data = $request->validate([
-                'name' => 'nullable|string',
-                'description' => 'nullable|string',
-                'image_url' => 'nullable|url',
-                'type' => 'nullable|in:student,mentor',
-                'condition_type' => 'nullable|string',
-                'condition_value' => 'nullable|integer',
-            ]);
-
-            $badge->update($data);
-
-            return response()->json($badge);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
-    }
+    
 
     // delete badge
     public function deleteBadge($id)

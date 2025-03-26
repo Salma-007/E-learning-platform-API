@@ -10,28 +10,34 @@ use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\Api\V2\RoleController;
 use App\Http\Controllers\Api\V2\BadgeController;
-use App\Http\Controllers\Api\V1\CourseController;
+use App\Http\Controllers\Api\V1\CourseController as CourseV1Controller;
+use App\Http\Controllers\Api\V3\CourseController as CourseV3Controller;
+use App\Http\Controllers\Api\V3\PaymentController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
 use App\Http\Controllers\Api\V2\Auth\UserController;
 use App\Http\Controllers\Api\V2\PermissionController;
 
 
+
+Route::prefix('v3')->middleware('auth:sanctum')->group(function () {
+
+    Route::get('/payments/checkout', [PaymentController::class, 'checkout']);
+    Route::get('/payments/status/{id}', [PaymentController::class, 'status']);
+    Route::get('/payments/history', [PaymentController::class, 'history']);
+
+});
+
+
 Route::prefix('v2')->group(function () {
-
-    Route::post('/badges', [BadgeController::class, 'createBadge']);
-
-    Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
-
-    Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge']);
-
+  
     Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
 
-    Route::post('/courses/{id}/videos', [CourseController::class, 'addVideoToCourse']);
-    Route::get('/courses/{id}/videos', [CourseController::class, 'listVideosOfCourse']);
-    Route::get('/videos/{id}', [CourseController::class, 'getVideo']);
-    Route::put('/videos/{id}', [CourseController::class, 'updateVideo']);
-    Route::delete('/videos/{id}', [CourseController::class, 'deleteVideo']);
+    Route::post('/courses/{id}/videos', [CourseV1Controller::class, 'addVideoToCourse']);
+    
+    Route::get('/videos/{id}', [CourseV1Controller::class, 'getVideo']);
+    Route::put('/videos/{id}', [CourseV1Controller::class, 'updateVideo']);
+    Route::delete('/videos/{id}', [CourseV1Controller::class, 'deleteVideo']);
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -53,10 +59,15 @@ Route::prefix('v2')->group(function () {
     }); 
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/courses/{id}/videos', [CourseV1Controller::class, 'listVideosOfCourse']);
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/edit', [UserController::class, 'update']);
         Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
+
+        Route::post('/badges', [BadgeController::class, 'createBadge']);
+        Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
+        Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge'])->middleware('role:admin');
     });
     
     Route::get('/students/{id}/courses', [StudentController::class, 'enrolledCourses']);
@@ -99,16 +110,16 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::prefix('courses')->group(function () {
-        Route::get('/', [CourseController::class, 'index']); 
-        Route::get('/{id}', [CourseController::class, 'show']); 
+        Route::get('/', [CourseV1Controller::class, 'index']); 
+        Route::get('/{id}', [CourseV1Controller::class, 'show']); 
 
         Route::middleware('auth:sanctum')->group(function () 
         {
-            Route::post('/', [CourseController::class, 'store'])->middleware('role:mentor'); 
+            Route::post('/', [CourseV1Controller::class, 'store'])->middleware('role:mentor'); 
         });
 
-        Route::put('/{id}', [CourseController::class, 'update']); 
-        Route::delete('/{id}', [CourseController::class, 'destroy']); 
+        Route::put('/{id}', [CourseV1Controller::class, 'update']); 
+        Route::delete('/{id}', [CourseV1Controller::class, 'destroy']); 
     });
 
 
