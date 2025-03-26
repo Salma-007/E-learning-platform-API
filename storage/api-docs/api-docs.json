@@ -159,16 +159,137 @@
         "/api/v1/courses": {
             "get": {
                 "tags": [
-                    "Course"
+                    "Courses"
                 ],
-                "summary": "Get a list of courses",
-                "operationId": "3522f88b734e2061541a8dbd0b6be53c",
+                "summary": "Get a paginated list of courses with optional filtering",
+                "description": "Returns a list of courses that can be filtered by search term, category, or difficulty level",
+                "operationId": "getCoursesList",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term to filter courses by title or description",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "ID of the category to filter courses",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "difficulty",
+                        "in": "query",
+                        "description": "Difficulty level to filter courses (beginner, intermediate, advanced)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "beginner",
+                                "intermediate",
+                                "advanced"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "title": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Invalid request"
+                        "description": "Invalid request parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid category ID"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Something went wrong"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -847,6 +968,93 @@
                 ]
             }
         },
+        "/api/v1/badges": {
+            "get": {
+                "tags": [
+                    "Badge"
+                ],
+                "summary": "Obtenir les badges de l'utilisateur",
+                "operationId": "b92011e05a3bf4fa335b5b5983fe9ab1",
+                "responses": {
+                    "200": {
+                        "description": "Liste des badges"
+                    },
+                    "401": {
+                        "description": "Non autorisé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/badges": {
+            "post": {
+                "tags": [
+                    "Badge"
+                ],
+                "summary": "Créer un nouveau badge (admin)",
+                "operationId": "bc6435117fafe6ae0d1b1dd94397dcce",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "type",
+                                    "condition_type",
+                                    "condition_value"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Expert"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A complété 10 cours"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "example": "https://example.com/badge.png"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "student"
+                                    },
+                                    "condition_type": {
+                                        "type": "string",
+                                        "example": "courses_completed"
+                                    },
+                                    "condition_value": {
+                                        "type": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Badge créé"
+                    },
+                    "403": {
+                        "description": "Non autorisé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v2/permissions": {
             "get": {
                 "tags": [
@@ -1494,6 +1702,10 @@
             "description": "Category"
         },
         {
+            "name": "Courses",
+            "description": "Courses"
+        },
+        {
             "name": "Course",
             "description": "Course"
         },
@@ -1504,6 +1716,10 @@
         {
             "name": "Tag",
             "description": "Tag"
+        },
+        {
+            "name": "Badge",
+            "description": "Badge"
         },
         {
             "name": "Permission",
