@@ -30,19 +30,17 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Course::with(['category', 'subCategory']);
-
-        if ($request->search) {
-            $query->where('name', 'LIKE', '%' . $request->search . '%');
-        }
-        if ($request->category) {
-            $query->where('category_id', $request->category);
-        }
-        if ($request->difficulty) {
-            $query->where('level', $request->difficulty);
-        }
+        try {
+            $courses = $this->courseService->listCourses([
+                'search' => $request->input('search'),
+                'category_id' => $request->input('category'),
+                'difficulty' => $request->input('difficulty')
+            ]);
     
-        return response()->json($query->get());
+            return response()->json($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**

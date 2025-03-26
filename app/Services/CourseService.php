@@ -19,7 +19,7 @@ class CourseService
         return $this->courseRepository->searchAndFilter(
             $filters['search'] ?? null,
             $filters['category_id'] ?? null,
-            $filters['difficulty_level'] ?? null
+            $filters['difficulty'] ?? null
         );
     }
 

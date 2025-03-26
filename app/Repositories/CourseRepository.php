@@ -19,28 +19,21 @@ class CourseRepository implements CourseInterface
         }
     }
 
-    public function searchAndFilter(string $search = null, int $categoryId = null, string $difficulty = null)
+    public function searchAndFilter(?string $search = null, ?int $categoryId = null, ?string $difficulty = null)
     {
-        try {
-            $query = Course::with(['category', 'subCategory']);
-
-            if ($search) {
-                $query->where('title', 'like', '%'.$search.'%');
-            }
-
-            if ($categoryId) {
-                $query->where('category_id', $categoryId);
-            }
-
-            if ($difficulty) {
-                $query->where('difficulty_level', $difficulty);
-            }
-
-            return $query->get();
-
-        } catch (QueryException $e) {
-            throw new \Exception("Une erreur s'est produite lors de la recherche/filtrage.");
+        $query = Course::with(['category', 'subCategory']);
+    
+        if ($search) {
+            $query->where('name', 'LIKE', "%{$search}%");
         }
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+        if ($difficulty) {
+            $query->where('level', $difficulty);
+        }
+    
+        return $query->get();
     }
     
     public function findById($id)
