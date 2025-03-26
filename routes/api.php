@@ -26,8 +26,6 @@ Route::prefix('v3')->middleware('auth:sanctum')->group(function () {
     Route::get('/payments/status/{id}', [PaymentController::class, 'status']);
     Route::get('/payments/history', [PaymentController::class, 'history']);
 
-    
-    
 });
 
 
