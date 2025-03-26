@@ -968,13 +968,13 @@
                 ]
             }
         },
-        "/api/v1/badges": {
+        "/api/v2/badges": {
             "get": {
                 "tags": [
                     "Badge"
                 ],
                 "summary": "Obtenir les badges de l'utilisateur",
-                "operationId": "b92011e05a3bf4fa335b5b5983fe9ab1",
+                "operationId": "e50dd19feef5e6e29bc197993c2775ff",
                 "responses": {
                     "200": {
                         "description": "Liste des badges"
@@ -990,13 +990,13 @@
                 ]
             }
         },
-        "/api/v1/admin/badges": {
+        "/api/v2/admin/badges": {
             "post": {
                 "tags": [
                     "Badge"
                 ],
                 "summary": "Créer un nouveau badge (admin)",
-                "operationId": "bc6435117fafe6ae0d1b1dd94397dcce",
+                "operationId": "70bdcf7fdd65e578ca1aa35f9e02f180",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1046,6 +1046,225 @@
                     },
                     "403": {
                         "description": "Non autorisé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v2/admin/badges/{id}": {
+            "put": {
+                "tags": [
+                    "Badges"
+                ],
+                "summary": "Mettre à jour un badge (Admin seulement)",
+                "operationId": "53ed3328971659294998daa945235ab4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID du badge",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Super Expert",
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A complété 20 cours",
+                                        "nullable": true
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "example": "https://example.com/new-badge.png",
+                                        "nullable": true
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "student",
+                                            "mentor"
+                                        ],
+                                        "example": "student",
+                                        "nullable": true
+                                    },
+                                    "condition_type": {
+                                        "type": "string",
+                                        "example": "courses_completed",
+                                        "nullable": true
+                                    },
+                                    "condition_value": {
+                                        "type": "integer",
+                                        "example": 20,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Badge mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Super Expert"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "A complété 20 cours"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "student"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Le type doit être student ou mentor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Badge non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Badge not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v2/badges/user/{id}": {
+            "get": {
+                "tags": [
+                    "Badges"
+                ],
+                "summary": "Obtenir les badges d'un utilisateur spécifique",
+                "operationId": "3da40b39fa540cf6f546194e11011626",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des badges de l'utilisateur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Expert"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "A complété 10 cours"
+                                            },
+                                            "image_url": {
+                                                "type": "string",
+                                                "example": "https://example.com/badge.png"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "student"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur de traitement",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1327,6 +1546,235 @@
                         "description": "Role not found"
                     }
                 }
+            }
+        },
+        "/api/v3/payments/checkout": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Initiate a payment checkout session",
+                "operationId": "2d7efabd83a7e4e58a0b81b5bc233770",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "course_id"
+                                ],
+                                "properties": {
+                                    "course_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Checkout session created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "checkout_url": {
+                                            "type": "string",
+                                            "example": "https://checkout.stripe.com/pay/cs_test_abc123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "course_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The selected course id is invalid."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v3/payments/status/{session_id}": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Check payment status",
+                "operationId": "ccf0943a20d2b1a5bbe2d4c2be318298",
+                "parameters": [
+                    {
+                        "name": "session_id",
+                        "in": "path",
+                        "description": "Stripe session ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "cs_test_abc123"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "pending",
+                                                "completed"
+                                            ],
+                                            "example": "completed"
+                                        },
+                                        "payment": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 99.99
+                                                },
+                                                "currency": {
+                                                    "type": "string",
+                                                    "example": "eur"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "completed"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Payment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v3/payments/history": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get user payment history",
+                "operationId": "86c06fbb6f89625f80fc6bd1f14b001f",
+                "responses": {
+                    "200": {
+                        "description": "List of user payments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 99.99
+                                            },
+                                            "currency": {
+                                                "type": "string",
+                                                "example": "eur"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "completed"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "course": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Advanced Programming"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v2/courses/{course}/enroll": {
@@ -1634,6 +2082,383 @@
                     }
                 }
             }
+        },
+        "/api/courses/{courseId}/videos": {
+            "get": {
+                "tags": [
+                    "Videos"
+                ],
+                "summary": "Lister les vidéos d'un cours",
+                "operationId": "7c5e62dccb001794290149620b5e3f46",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "ID du cours",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des vidéos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "course_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "videos": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Introduction au cours"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Vidéo d'introduction"
+                                                    },
+                                                    "file_path": {
+                                                        "type": "string",
+                                                        "example": "https://example.com/video.mp4"
+                                                    },
+                                                    "course_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Authentification requise."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès refusé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Vous devez être inscrit à ce cours."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cours non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Cours non trouvé."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erreur serveur"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Videos"
+                ],
+                "summary": "Ajouter une vidéo à un cours",
+                "operationId": "ae01d3707e20fb1c6d46f32b469b09ef",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "ID du cours",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "video_file"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Introduction au cours"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Vidéo d'introduction",
+                                        "nullable": true
+                                    },
+                                    "video_file": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "https://example.com/video.mp4"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Vidéo ajoutée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vidéo ajoutée avec succès."
+                                        },
+                                        "video": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Introduction au cours"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Vidéo d'introduction"
+                                                },
+                                                "file_path": {
+                                                    "type": "string",
+                                                    "example": "https://example.com/video.mp4"
+                                                },
+                                                "course_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Données invalides",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Le champ title est obligatoire"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "404": {
+                        "description": "Cours non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Cours non trouvé."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erreur serveur"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/videos/{id}": {
+            "delete": {
+                "tags": [
+                    "Videos"
+                ],
+                "summary": "Supprimer une vidéo",
+                "operationId": "925caf3865793e42e561f39e87eeee52",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la vidéo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vidéo supprimée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vidéo supprimée avec succès."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "403": {
+                        "description": "Permission refusée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Action non autorisée."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Vidéo non trouvée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Vidéo non trouvée."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erreur serveur"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1694,8 +2519,16 @@
             "description": "Gestion de l'authentification des utilisateurs"
         },
         {
+            "name": "Payments",
+            "description": "Endpoints for payment processing"
+        },
+        {
             "name": "Statistics",
             "description": "Statistiques sur les cours, catégories et tags"
+        },
+        {
+            "name": "Videos",
+            "description": "Gestion des vidéos de cours"
         },
         {
             "name": "Category",
@@ -1720,6 +2553,10 @@
         {
             "name": "Badge",
             "description": "Badge"
+        },
+        {
+            "name": "Badges",
+            "description": "Badges"
         },
         {
             "name": "Permission",

@@ -34,7 +34,7 @@ Route::prefix('v2')->group(function () {
     Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
 
     Route::post('/courses/{id}/videos', [CourseV1Controller::class, 'addVideoToCourse']);
-    Route::get('/courses/{id}/videos', [CourseV1Controller::class, 'listVideosOfCourse']);
+    
     Route::get('/videos/{id}', [CourseV1Controller::class, 'getVideo']);
     Route::put('/videos/{id}', [CourseV1Controller::class, 'updateVideo']);
     Route::delete('/videos/{id}', [CourseV1Controller::class, 'deleteVideo']);
@@ -59,6 +59,7 @@ Route::prefix('v2')->group(function () {
     }); 
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/courses/{id}/videos', [CourseV1Controller::class, 'listVideosOfCourse']);
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/edit', [UserController::class, 'update']);
         Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
