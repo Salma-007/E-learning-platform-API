@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Services\VideoService;
 use OpenAPI\Annotations as OS;
@@ -27,13 +28,21 @@ class CourseController extends Controller
      *     @OA\Response(response=400, description="Invalid request")
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            return response()->json($this->courseService->listCourses());
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        $courses = Course::when($request->search, function($query) use ($request) {
+                    $query->where('name', 'LIKE', '%'.$request->search.'%');
+                })
+                ->when($request->category, function($query) use ($request) {
+                    $query->where('category_id', $request->category);
+                })
+                ->when($request->difficulty, function($query) use ($request) {
+                    $query->where('level', $request->difficulty);
+                })
+                ->with(['category', 'subCategory'])
+                ->get();
+    
+        return response()->json($courses);
     }
 
     /**
